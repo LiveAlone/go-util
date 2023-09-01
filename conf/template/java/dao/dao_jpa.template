@@ -7,14 +7,25 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 /**
- * Description: {{ .Comment }}
+ * Description: Repository {{ .Comment }}
  *
  * @author qjyao
  * @date 2023/8/29
  */
 public interface {{ .BeanName }}Repository extends JpaRepository<{{ .BeanName }}, Long>, JpaSpecificationExecutor<{{ .BeanName }}> {
 
-    List<AiChatLib> findByAppIdAndInputOutputTypeAndDeleted(String appId, Integer inputOutputType, Boolean deleted);
+    {{- range $index, $element := .IndexList }}
 
-    AiChatLib findByLibId(Long libId);
+    // {{ $element.IndexName }} {{ $element.IndexComment }}
+    {{- /* 循环判断函数 */}}
+    {{if not $element.Unique }}List<{{ $.BeanName }}>{{- else}}{{ $.BeanName }}
+    {{- end}} findBy
+        {{- range $index2, $field := $element.Fields }}
+            {{- if gt $index2 0}}And{{- end}}{{ $field.FieldNameFL }}
+            {{- end}}(
+
+        {{- range $fi, $field := $element.Fields }}
+            {{- if gt $fi 0}}, {{end}}{{ $field.FieldType }} {{ $field.FieldName }}
+        {{- end}});
+    {{- end }}
 }

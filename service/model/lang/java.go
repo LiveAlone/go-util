@@ -1,13 +1,13 @@
 package lang
 
 import (
-	"fmt"
 	"github.com/LiveAlone/go-util/domain"
 	"github.com/LiveAlone/go-util/domain/config"
 	"github.com/LiveAlone/go-util/domain/mysql"
 	"github.com/LiveAlone/go-util/domain/template"
 	"github.com/LiveAlone/go-util/domain/template/bo"
 	"log"
+	"sort"
 	"strings"
 )
 
@@ -43,7 +43,12 @@ func (g *JavaCodeGenerator) GenDaoFromTableInfo(tableInfo *mysql.TableInfo, para
 	}
 	rs[strings.ReplaceAll(params.PackageName, ".", "/")+"/"+modelStruct.BeanName+".java"] = modelContent
 
-	log.Println("modelContent:", modelContent)
+	daoStruct := g.convertIndexModeStruct(tableInfo, params)
+	daoContent, err := g.TempGen.GenerateTemplateByName("JpaDao", daoStruct, nil)
+	if err != nil {
+		return nil, err
+	}
+	rs[strings.ReplaceAll(params.PackageName, ".", "/")+"/"+daoStruct.BeanName+"Repository.java"] = daoContent
 	return
 }
 
@@ -55,14 +60,40 @@ func (g *JavaCodeGenerator) convertIndexModeStruct(tableInfo *mysql.TableInfo, p
 		Comment:     tableInfo.Schema.TableComment,
 	}
 
+	// 构建字段名映射关系
+	columnMap := make(map[string]*mysql.TableInfoColumn)
+	for _, column := range tableInfo.Column {
+		columnMap[column.ColumnName] = column
+	}
+
 	indexMap := make(map[string]*bo.DaoIndex)
 	for _, statistics := range tableInfo.Index {
-		// todo yqj fix 填充索引数据信息
-		fmt.Println(statistics)
+		current, ok := indexMap[statistics.IndexName]
+		if !ok {
+			current = &bo.DaoIndex{
+				IndexName:    statistics.IndexName,
+				Unique:       !statistics.NoUnique,
+				Fields:       make([]*bo.DaoIndexField, 0),
+				IndexComment: statistics.IndexComment,
+			}
+			indexMap[statistics.IndexName] = current
+		}
+
+		current.Fields = append(current.Fields, &bo.DaoIndexField{
+			Index:       statistics.SeqInIndex,
+			ColumnName:  statistics.ColumnName,
+			ColumnType:  columnMap[statistics.ColumnName].DataType,
+			FieldName:   domain.ToCamelCaseFistLower(statistics.ColumnName),
+			FieldNameFL: domain.ToCamelCaseFistLarge(statistics.ColumnName),
+			FieldType:   g.JavaConfigYaml.DbTypeMap[columnMap[statistics.ColumnName].DataType],
+		})
 	}
-	// 维护映射关系
 
 	for _, item := range indexMap {
+		// sort index fields
+		sort.Slice(item.Fields, func(i, j int) bool {
+			return item.Fields[i].Index < item.Fields[j].Index
+		})
 		rs.IndexList = append(rs.IndexList, item)
 	}
 	return rs

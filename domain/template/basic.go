@@ -22,6 +22,7 @@ var structNameTemplateMap = map[string]string{
 	//"ApiService": "api/service",
 
 	"JpaModel": "java/dao/model_jpa",
+	"JpaDao":   "java/dao/dao_jpa",
 }
 
 // Generator 模版生成器
