@@ -1,0 +1,111 @@
+package models
+
+import (
+    "github.com/gin-gonic/gin"
+
+    "database/sql"
+
+    "gorm.io/datatypes"
+	"gorm.io/gorm"
+)
+
+const TableNameOf{{.BeanName}} = "{{.TableName}}"
+
+// {{.BeanName}} {{.Comment}}
+type {{ .BeanName }} struct {
+    gorm.Model
+    {{- range .Columns}}
+    {{- if or (eq .ColumnName "id") (or (eq .ColumnName "created_at") ( or (eq .ColumnName "updated_at") (eq .ColumnName "deleted_at") ) ) }}{{ continue }}{{ end }}
+    {{.ColumnName | ToCamelCaseFistLarge}} {{.FieldType}} `gorm:"column:{{ .ColumnName }}"` //{{.Comment}}
+    {{- end}}
+}
+
+type {{.BeanName}}Dao struct {
+    Ctx *gin.Context
+    Tx  *gorm.DB
+}
+
+func New{{.BeanName}}Dao(ctx *gin.Context) (db *{{.BeanName}}Dao) {
+	db = new({{.BeanName}}Dao)
+	// todo 初始化db，context
+	db.Ctx = ctx
+	return
+}
+
+func (entity *{{.BeanName}}Dao) GetDB() *gorm.DB {
+    return entity.Tx
+}
+
+func (entity *{{.BeanName}}Dao) Insert(bean *{{ .BeanName }}) error {
+	err := entity.GetDB().Table(TableNameOf{{.BeanName}}).Create(bean).Error
+	if err != nil {
+		zlog.Errorf(entity.Ctx, "db insert {{.TableName}} error, bean:%v, cause:%v", bean, err)
+		return err
+	}
+	return nil
+}
+
+func (entity *{{.BeanName}}Dao) UpdateAllFields(info *{{ .BeanName }}) (int64, error) {
+    if info.ID == 0 {
+  	    return 0, components.ErrorParamInvalid
+  	}
+  	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Save(info)
+	if rs.Error != nil {
+		zlog.Errorf(entity.Ctx, "db UpdateAllFields {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
+        return 0, rs.Error
+	}
+	return rs.RowsAffected, nil
+}
+
+func (entity *{{.BeanName}}Dao) UpdateByEntity(info *{{ .BeanName }}) (int64, error) {
+    if info.ID == 0 {
+  	    return 0, components.ErrorParamInvalid
+  	}
+  	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Updates(info)
+  	if rs.Error != nil {
+  		zlog.Errorf(entity.Ctx, "db UpdateByEntity {{.TableName}} error, info:%v, cause:%v", info, rs.Error)
+  		return 0, rs.Error
+  	}
+  	return rs.RowsAffected, nil
+}
+
+func (entity *{{.BeanName}}Dao) Update(values map[string]interface{}, scopes *WhereScopes) (int64, error) {
+  	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Updates(values)
+  	if rs.Error != nil {
+  		zlog.Errorf(entity.Ctx, "db update {{.TableName}} error, values:%v, scopes:%v cause:%v", values, scopes, rs.Error)
+  		return 0, rs.Error
+  	}
+  	return rs.RowsAffected, nil
+}
+
+func (entity *{{.BeanName}}Dao) Delete(scopes *WhereScopes) (int64, error) {
+    result := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Delete(&{{ .BeanName }}{})
+	if result.Error != nil {
+	    zlog.Errorf(entity.Ctx, "db Delete {{.TableName}} error, scopes:%v, cause:%v", scopes, result.Error)
+        return 0, result.Error
+	}
+	return result.RowsAffected, nil
+}
+
+func (entity *{{.BeanName}}Dao) Get{{ .BeanName }}(scopes *WhereScopes) (*{{ .BeanName }}, error) {
+    var info *{{ .BeanName }}
+	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).First(&info)
+	if rs.Error == gorm.ErrRecordNotFound {
+   		return nil, rs.Error
+   	}
+	if rs.Error != nil {
+		zlog.Errorf(entity.Ctx, "db get {{.TableName}} error, scopes:%v, cause:%v", scopes, rs.Error)
+		return nil, rs.Error
+	}
+	return info, nil
+}
+
+func (entity *{{.BeanName}}Dao) Get{{ .BeanName }}List (scopes *WhereScopes) ([]*{{ .BeanName }}, error) {
+    var data []*{{ .BeanName }}
+	rs := entity.GetDB().Table(TableNameOf{{.BeanName}}).Scopes(scopes.Scopes...).Find(&data)
+	if rs.Error != nil {
+		zlog.Errorf(entity.Ctx, "db get list {{.TableName}} error, scopes:%v, cause:%v", scopes, rs.Error)
+		return nil, rs.Error
+	}
+	return data, nil
+}

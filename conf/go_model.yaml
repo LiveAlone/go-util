@@ -1,0 +1,43 @@
+db_type_map:
+  int: int32
+  tinyint: int8
+  smallint: int
+  mediumint: int64
+  bigint: int64
+  bit: int
+  bool: bool
+  enum: string
+  set: string
+  varchar: string
+  char: string
+  tinytext: string
+  mediumtext: string
+  text: string
+  longtext: string
+  blob: string
+  tinyblob: string
+  mediumblob: string
+  longblob: string
+  date: time.Time
+  datetime: time.Time
+  timestamp: time.Time
+  time: time.Time
+  float: float64
+  double: float64
+
+go_nullable_map:
+  byte : sql.NullByte
+  bool : sql.NullBool
+  float64 : sql.NullFloat64
+  int64 : sql.NullInt64
+  int32 : sql.NullInt32
+  int16 : sql.NullInt16
+  string : sql.NullString
+  time.Time : sql.NullTime
+
+api_type_map:
+  number: int
+  string: string
+  boolean: bool
+  integer: int
+

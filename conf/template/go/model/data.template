@@ -1,0 +1,37 @@
+package data
+
+import (
+	"github.com/gin-gonic/gin"
+)
+
+type {{.BeanName}}Data struct {
+	ctx           *gin.Context
+	{{.BeanName | ToCamelCaseFistLower}}Dao *models.{{.BeanName}}Dao
+}
+
+func New{{.BeanName}}Data(ctx *gin.Context) *{{.BeanName}}Data {
+	return &{{.BeanName}}Data{
+		ctx:           ctx,
+		{{.BeanName | ToCamelCaseFistLower}}Dao: models.New{{.BeanName}}Dao(ctx),
+	}
+}
+{{- define "funcName" -}}
+QueryBy{{range $index, $element := .Fields}}{{if ne $index 0}}And{{end}}{{$element.ColumnName | ToCamelCaseFistLarge}}{{end}}
+{{- end -}}
+{{- define "param" -}}
+{{range $index, $element := .Fields}}{{if ne $index 0}}, {{end}}{{$element.ColumnName | ToCamelCaseFistLower}} {{$element.FieldType}}{{end}}
+{{- end -}}
+{{- define "whereQuery" -}}
+"{{range $index, $element := .Fields}}{{if ne $index 0}} and {{end}}{{$element.ColumnName}} = ?{{end}}",
+{{- range $index, $element := .Fields}}{{if ne $index 0}},{{end}} {{$element.ColumnName | ToCamelCaseFistLower}}{{end -}}
+{{- end -}}
+
+{{ range .DataIndex}}
+// {{ template "funcName" .}} {{ .IndexName }} unique: {{ .Unique }} {{ .IndexComment }}
+func (entity *{{$.BeanName}}Data) {{ template "funcName" .}}({{template "param" .}}) ({{if .Unique}}*models.{{$.BeanName}}{{else}}[]*models.{{$.BeanName}}{{end}}, error) {
+	var scp models.WhereScopes
+	scp.Where({{template "whereQuery" .}})
+    {{if .Unique}}return entity.{{$.BeanName | ToCamelCaseFistLower}}Dao.GetModelTable(&scp)
+    {{- else }}return entity.modelTableDao.GetModelTableList(&scp){{end}}
+}
+{{ end }}

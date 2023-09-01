@@ -1,0 +1,9 @@
+db:
+  url: root:anywhere@tcp(localhost:3306)/information_schema?charset=utf8mb4&parseTime=True&loc=Local
+  dataBase: test
+  tables: AiChatLib
+
+# 生成不同语言配置方式
+target:
+  lang: java # java/go (default: java) 不同语言生成的模型文件不一样
+  package: com.iflytek.aisol.audit.resmanage.dao.entity

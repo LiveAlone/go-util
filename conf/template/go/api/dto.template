@@ -1,0 +1,13 @@
+package dest
+{{ range .dtoList }}
+//{{ .Name }} {{ .Desc }} {{ .Example }}
+type {{ .Name }} struct{
+    {{- range .DtoFieldDesc }}
+    {{ .Name }}
+    {{- if .Array }}    []{{.Type }}{{else}}    {{.Type }}{{ end }}
+    {{- if .Required }}  `json:"{{.Name|ToCamelCaseFistLower}}" binding:"required"`{{else}}  `json:"{{.Name|ToCamelCaseFistLower}}"`{{ end }}
+    {{- if or (gt (.Desc | len) 0) (gt (.Example | len) 0)}} // {{ .Desc }} {{ .Example }}{{end}}
+
+    {{- end }}
+}
+{{ end }}

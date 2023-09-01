@@ -1,0 +1,27 @@
+dbTypeMap:
+  int: Integer
+  tinyint: Integer
+  smallint: Integer
+  mediumint: Integer
+  bigint: Long
+  bit: Byte
+  bool: Boolean
+  enum: String
+  set: String
+  varchar: String
+  char: String
+  tinytext: String
+  mediumtext: String
+  text: String
+  longtext: String
+  blob: String
+  tinyblob: String
+  mediumblob: String
+  longblob: String
+  date: Date
+  datetime: Date
+  timestamp: Date
+  time: Date
+  float: float64
+  double: float64
+

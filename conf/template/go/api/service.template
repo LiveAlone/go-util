@@ -1,0 +1,17 @@
+package dest
+
+import(
+	"git.zuoyebang.cc/huixuexi/classflow/layer"
+)
+
+type {{.Prefix}}Service struct {
+	layer.Service
+}
+
+func (entity *{{.Prefix}}Service) OnCreate(param layer.IFlowParam) {
+	entity.Service.OnCreate(param)
+}
+
+func (entity *{{ .Prefix }}Service) Action() ({{ .Prefix }}Res, error) {
+    return nil, nil
+}

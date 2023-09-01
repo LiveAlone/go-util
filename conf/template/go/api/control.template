@@ -1,0 +1,19 @@
+package dest
+
+import (
+	"git.zuoyebang.cc/huixuexi/classflow/layer"
+)
+
+type {{ .Prefix }}Controller struct {
+	layer.Controller
+	dto *{{ .Prefix }}Req
+}
+
+func (entity *{{ .Prefix }}Controller) GetDtoRequest() interface{} {
+	entity.dto = &{{ .Prefix }}Req{}
+	return entity.dto
+}
+
+func (entity *{{ .Prefix }}Controller) Action() ({{ .Prefix }}Res, error) {
+    return nil, nil
+}

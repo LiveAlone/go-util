@@ -1,0 +1,34 @@
+package dest
+
+const (
+	{{- range .apiList}}
+	{{.Prefix}}Url = "{{$.basePath}}{{.Path}}"
+	{{- end}}
+)
+
+type {{ .name }}Api struct {
+	layer.Api
+}
+
+{{- range .apiList}}
+{{- if eq .Method "POST"}}
+func (entity *{{ $.name }}Api) {{.Prefix}}(req *{{.Prefix}}Req) (output *{{.Prefix}}Res, err error) {
+    apiRes, err := entity.ApiPost({{.Prefix}}Url, req)
+    if err = decodeApiResponse(&entity.Api, &output, apiRes, err); err != nil {
+    	entity.LogErrorf("{{$.name}} {{.Prefix}} error, req:%v, err:%v", req, err)
+    	return nil, err
+    }
+   	return output, nil
+}
+{{- else}}
+func (entity *{{ $.name }}Api) {{.Prefix}}(req *{{.Prefix}}Req) (output *{{.Prefix}}Res, err error) {
+    mapReq := utils.StructToMap(req)
+    apiRes, err := entity.ApiGet({{.Prefix}}Url, req)
+    if err = decodeApiResponse(&entity.Api, &output, apiRes, err); err != nil {
+    	entity.LogErrorf("{{$.name}} {{.Prefix}} error, req:%v, err:%v", req, err)
+    	return nil, err
+    }
+   	return output, nil
+}
+{{end}}
+{{end}}

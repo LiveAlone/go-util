@@ -1,0 +1,20 @@
+package {{ .PackageName }};
+
+import {{ .PackageName }}.{{ .BeanName }};
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.List;
+
+/**
+ * Description: {{ .Comment }}
+ *
+ * @author qjyao
+ * @date 2023/8/29
+ */
+public interface {{ .BeanName }}Repository extends JpaRepository<{{ .BeanName }}, Long>, JpaSpecificationExecutor<{{ .BeanName }}> {
+
+    List<AiChatLib> findByAppIdAndInputOutputTypeAndDeleted(String appId, Integer inputOutputType, Boolean deleted);
+
+    AiChatLib findByLibId(Long libId);
+}
