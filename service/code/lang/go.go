@@ -1,6 +1,9 @@
 package lang
 
-import "github.com/LiveAlone/go-util/domain/mysql"
+import (
+	"errors"
+	"github.com/LiveAlone/go-util/domain/mysql"
+)
 
 type GoCodeGenerator struct {
 }
@@ -10,7 +13,7 @@ func NewGoCodeGenerator() *GoCodeGenerator {
 }
 
 func (g *GoCodeGenerator) GenDaoFromTableInfo(tableInfo *mysql.TableInfo, params *CodeGenParams) (rs map[string]string, err error) {
-	return nil, err
+	return nil, errors.New("not support")
 }
 
 // GenerateGoModel 生成go model
@@ -25,7 +28,7 @@ func GenerateGoModel() {
 	//db := sqlModelConfig.Db
 	//tbs := strings.Split(db.Tables, ",")
 	//
-	//tableCode, dataCode, err := gen.Gen(db.Url, db.DataBase, tbs)
+	//tableCode, dataCode, err := gen.GenDao(db.Url, db.DataBase, tbs)
 	//if err != nil {
 	//	log.Fatalf("db model generate error, err :%v", err)
 	//}

@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/LiveAlone/go-util/service/model"
+	"github.com/LiveAlone/go-util/service/code"
 	"github.com/LiveAlone/go-util/util"
 	"log"
 	"strings"
@@ -12,7 +12,7 @@ import (
 
 var targetPath string
 
-func NewModelCmd(daoGenerator *model.DaoGenerator) *cobra.Command {
+func NewModelCmd(generator *code.Generator) *cobra.Command {
 	desc := strings.Join([]string{
 		"0. -d 指定生成目标地址",
 		"1. 基于{target}/db.yaml获取代码生成配置信息",
@@ -20,11 +20,11 @@ func NewModelCmd(daoGenerator *model.DaoGenerator) *cobra.Command {
 	}, "\n")
 
 	cmd := &cobra.Command{
-		Use:   "model",
+		Use:   "code",
 		Short: "基于数据表生成Dao层代码",
 		Long:  desc,
 		Run: func(cmd *cobra.Command, args []string) {
-			rs, err := daoGenerator.Gen(targetPath)
+			rs, err := generator.GenDao(targetPath)
 			if err != nil {
 				log.Fatalf("generate dao error %v", err)
 			}

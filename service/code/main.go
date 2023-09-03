@@ -1,32 +1,43 @@
-package model
+package code
 
 import (
 	"fmt"
 	"github.com/LiveAlone/go-util/domain/config"
 	"github.com/LiveAlone/go-util/domain/mysql"
-	"github.com/LiveAlone/go-util/service/model/lang"
+	"github.com/LiveAlone/go-util/service/code/lang"
 	"log"
 	"strings"
 )
 
-// DaoGenerator dao层代码生成器
-type DaoGenerator struct {
+// Generator dao层代码生成器
+type Generator struct {
 	ConfigLoader *config.Loader
 	Factory      *lang.CodeGenFactory
 }
 
-func NewDaoGenerator(configLoader *config.Loader, factory *lang.CodeGenFactory) *DaoGenerator {
-	return &DaoGenerator{
+func NewDaoGenerator(configLoader *config.Loader, factory *lang.CodeGenFactory) *Generator {
+	return &Generator{
 		ConfigLoader: configLoader,
 		Factory:      factory,
 	}
 }
 
-// Gen 生成不同路径下代码
-func (g *DaoGenerator) Gen(targetPath string) (rs map[string]string, err error) {
+// GenClient 生成Rpc调用客户端代码
+func (g *Generator) GenClient() (rs map[string]string, err error) {
+	// 1. 获取配置信息。
+
+	// 2. 配置转换为代码schema
+
+	// 3. 通过template 生成api 层接口协议
+
+	return nil, err
+}
+
+// GenDao 生成dao持久层代码
+func (g *Generator) GenDao(targetPath string) (rs map[string]string, err error) {
 	// 1. 获取配置信息
 	modelConfig := &Config{}
-	err = g.ConfigLoader.LoadConfigToEntity(fmt.Sprintf("%s/%s", targetPath, "model.yaml"), modelConfig)
+	err = g.ConfigLoader.LoadConfigToEntity(fmt.Sprintf("%s/%s", targetPath, "dao.yaml"), modelConfig)
 	if err != nil {
 		return nil, err
 	}

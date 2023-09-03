@@ -1,6 +1,6 @@
-package model
+package code
 
-// todo yqj golang 代码模型生成器
+// todo yqj golang 代码模型生成器 deleted
 //// SchemaInformationGen 基于SchemaInformation生成代码
 //type SchemaInformationGen struct {
 //	tempGenerator *template.Generator
@@ -12,7 +12,7 @@ package model
 //	}
 //}
 //
-//func (s *SchemaInformationGen) Gen(url string, db string, tableList []string) (modelCode map[string]string, dataCode map[string]string, err error) {
+//func (s *SchemaInformationGen) GenDao(url string, db string, tableList []string) (modelCode map[string]string, dataCode map[string]string, err error) {
 //	if len(tableList) == 0 {
 //		return nil, nil, nil
 //	}

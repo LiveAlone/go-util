@@ -21,7 +21,7 @@
 - domain 支持业务模块
 
 ### 命令行
-1. model 数据表转换Dao 查询模型
+1. code-gen 代码生成工具, 三方读取资源生成固定代码文件。
 2. word 驼峰大小写转换
 3. convert 自动化文件转换工具
 4. Api 支持yapi 转换Golang 文件内容

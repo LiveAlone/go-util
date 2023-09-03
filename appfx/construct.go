@@ -5,8 +5,8 @@ import (
 	"github.com/LiveAlone/go-util/domain/template"
 	"github.com/LiveAlone/go-util/service/api"
 	"github.com/LiveAlone/go-util/service/api/yapi"
-	"github.com/LiveAlone/go-util/service/model"
-	"github.com/LiveAlone/go-util/service/model/lang"
+	"github.com/LiveAlone/go-util/service/code"
+	"github.com/LiveAlone/go-util/service/code/lang"
 )
 
 func AppConstruct() []interface{} {
@@ -23,7 +23,7 @@ func AppConstruct() []interface{} {
 	depConstruct = append(depConstruct, template.NewGenerator)
 
 	// db 模型
-	depConstruct = append(depConstruct, model.NewDaoGenerator, lang.NewCodeGenFactory, lang.NewJavaCodeGenerator, lang.NewGoCodeGenerator)
+	depConstruct = append(depConstruct, code.NewDaoGenerator, lang.NewCodeGenFactory, lang.NewJavaCodeGenerator, lang.NewGoCodeGenerator)
 
 	// api gen
 	depConstruct = append(depConstruct,
