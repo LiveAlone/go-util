@@ -10,7 +10,7 @@ import (
 var SubCmdList = []interface{}{
 	cmd.NewWordCmd,
 	cmd.NewFileConvertCmd,
-	cmd.NewModelCmd,
+	cmd.NewCodeCmd,
 	cmd.NewApiParam,
 }
 

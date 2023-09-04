@@ -27,12 +27,8 @@ type GoConfig struct {
 
 // ClientConfig dest/client.yml 获取配置信息
 type ClientConfig struct {
-	Schema string        `yaml:"schema"`
-	Source *ClientSource `yaml:"source"`
-}
-
-// ClientSource 资源获取方式
-type ClientSource struct {
-	Type stirng `yaml:"type"`
-	Url  string `yaml:"url"`
+	Schema string `yaml:"schema"`
+	Lang   string `yaml:"lang"`
+	Type   string `yaml:"type"`
+	Url    string `yaml:"url"`
 }

@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/LiveAlone/go-util/util"
 	"gopkg.in/yaml.v3"
 	"os"
 	"strings"
@@ -27,6 +28,19 @@ func (l *Loader) LoadConfigToEntity(path string, entity any) error {
 	}
 
 	err = yaml.Unmarshal(confContent, entity)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// LoadConfigFromUrlToEntity 从url加载配置信息到实体
+func (l *Loader) LoadConfigFromUrlToEntity(url string, entity any) (err error) {
+	content, err := util.Get(url, nil)
+	if err != nil {
+		return err
+	}
+	err = yaml.Unmarshal(content, entity)
 	if err != nil {
 		return err
 	}

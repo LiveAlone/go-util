@@ -1,5 +1,4 @@
 schema: swagger # swagger/yapi 不同文档支持生成不同配置
-source: # 配置获取方式
-  type: url # http get
-  url: http://localhost:8080/v2/api-docs # swagger文档地址
-
+lang: java
+type: url # http get
+url: http://localhost:8080/v2/api-docs # swagger文档地址

@@ -24,7 +24,12 @@ func NewDaoGenerator(configLoader *config.Loader, factory *lang.CodeGenFactory) 
 
 // GenClient 生成Rpc调用客户端代码
 func (g *Generator) GenClient() (rs map[string]string, err error) {
-	// 1. 获取配置信息。
+	// 1. 获取配置信息
+	clientConfig := &ClientConfig{}
+	err = g.ConfigLoader.LoadConfigToEntity("client.yaml", clientConfig)
+	if err != nil {
+		return nil, err
+	}
 
 	// 2. 配置转换为代码schema
 

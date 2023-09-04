@@ -12,16 +12,17 @@ import (
 
 var targetPath string
 
-func NewModelCmd(generator *code.Generator) *cobra.Command {
+func NewCodeCmd(generator *code.Generator) *cobra.Command {
 	desc := strings.Join([]string{
 		"0. -d 指定生成目标地址",
-		"1. 基于{target}/db.yaml获取代码生成配置信息",
-		"2. 支持java/go 语言生成，默认java",
+		"1. -t 指定代码生成类型，dao, client等",
+		"1.1 type=dao 基于{target}/db.yaml获取代码生成配置信息",
+		"2.1 type=client 基于{target}/client.yaml获取代码生成配置信息",
 	}, "\n")
 
 	cmd := &cobra.Command{
 		Use:   "code",
-		Short: "基于数据表生成Dao层代码",
+		Short: "代码生成工具",
 		Long:  desc,
 		Run: func(cmd *cobra.Command, args []string) {
 			rs, err := generator.GenDao(targetPath)
